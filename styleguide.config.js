@@ -1,19 +1,32 @@
+const paths = require('./paths');
+
 module.exports = {
 	title: 'React Style Guide Example',
 	defaultExample: true,
-	components: './lib/components/**/[A-Z]*.js',
+        components: 'src/components/**/[A-Z]*.{ts,tsx}',
 	webpackConfig: {
 		module: {
 			loaders: [
 				{
-					test: /\.jsx?$/,
-					exclude: /node_modules/,
-					loader: 'babel-loader',
-				},
-				{
-					test: /\.css$/,
-					loader: 'style-loader!css-loader?modules&importLoaders=1',
-				}
+					    test: /\.(ts|tsx)$/,
+                                            include: paths.appSrc,
+					    loader: 'ts-loader',
+			        },
+				  {
+				    test: /\.module\.css$/,
+				    use: [
+				      require.resolve('style-loader'),
+				      {
+					loader: require.resolve('typings-for-css-modules-loader'),
+					options: {
+					  importLoaders: 1,
+					  modules: true,
+					  namedExport: true,
+					  localIdentName: '[name]__[local]__[hash:base64:5]'
+					},
+				      },
+				    ],
+				  },
 			]
 		}
 	},
